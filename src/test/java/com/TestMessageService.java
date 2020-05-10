@@ -13,13 +13,13 @@ public class TestMessageService {
 	@Test
 	public void testMessage() {
 		MessageService ms = new MessageService();
-		System.out.println("Hello Engineers");
-		Assertions.assertEquals(ms.sayHello(), "Hello Engineers");
+		System.out.println("Application list 1.Knome 2.UX app 3.Fresco talk");
+		Assertions.assertEquals(ms.list(), "Application list 1.Knome 2.UX app 3.Fresco talk");
 	}
 	@Test
 	public void testWelcome() {
 		MessageService ms = new MessageService();
-		Assertions.assertEquals(ms.welcomeGuest(), "Welcome to the world of Devops");
+		Assertions.assertEquals(ms.welcomeGuest(), "Welcome to the Ultimatix Application");
 	}
 	
 }

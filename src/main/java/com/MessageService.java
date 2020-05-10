@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MessageService {
 	
-	@GetMapping("/hello")
-	public String sayHello() {
-		return "Hello Engineers";
+	@GetMapping("/list")
+	public String list() {
+		return "Application list 1.Knome 2.UX app 3.Fresco talk";
 	}
 	
 	@GetMapping("/welcome")
 	public String welcomeGuest() {
-		return "Welcome to the world of Devops";
+		return "Welcome to the Ultimatix Application";
 	}
 	
 }
