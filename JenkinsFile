@@ -1,6 +1,6 @@
 node{
     stage('stage 1: Git checkout'){
-        git 'https://github.com/arjunkauthkar/CICD-Pipeline.git'
+        git 'https://github.com/arjunkauthkar/Spring-Boot-Application.git'
     }
     
     stage('stage 2: Maven clean'){
