@@ -1,15 +1,13 @@
-FROM openjdk:8-jdk-alpine
+FROM tomcat:latest
 
-VOLUME /tmp
+ADD target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 8888
+EXPOSE 8885
 
-ARG JAR_FILE=/target/*.jar
+RUN sed -i 's/port="8080"/port="8885"/' /usr/local/tomcat/conf/server.xml
 
-COPY ${JAR_FILE} app.jar
-
-RUN echo "Creation of your docker image is in progress, please hold on for a moment"
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+RUN echo "Creating docker image for my spring boot application"
 
 MAINTAINER "arjunkauthkar59@gmail.com"
+
+CMD ["catalina.sh", "run"]

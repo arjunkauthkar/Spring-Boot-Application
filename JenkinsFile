@@ -3,44 +3,46 @@ node{
         git 'https://github.com/arjunkauthkar/Spring-Boot-Application.git'
     }
     
-    stage('stage 2: Maven clean'){
+    stage('stage 2: Maven clean and compile'){
         def mavenHome = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHome}/bin/mvn"
-        sh "${mavenCMD} clean"
+        sh "${mavenCMD} compile"
     }
     
-    stage('stage 3: Maven build,test and package'){
-        def mavenHome = tool name: 'maven3', type: 'maven'
-        def mavenCMD = "${mavenHome}/bin/mvn"
-        sh "${mavenCMD} install"
-    }
-    
-    stage('stage 4: Sonarqube scanner'){
+    stage('stage 3: Sonar quality check'){
         def mavenHome = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHome}/bin/mvn"
         sh "${mavenCMD} sonar:sonar"
     }
     
-    stage('stage 4: Building docker image'){
+    stage('stage 4: Maven build test and package'){
+        def mavenHome = tool name: 'maven3', type: 'maven'
+        def mavenCMD = "${mavenHome}/bin/mvn"
+        sh "${mavenCMD} package"
+    }
+          
+    stage('stage 5: Building docker image'){
         sh 'docker build -t arjunkauthkar/springboot:1.0.0 .'
     }
     
-    stage('stage 5: Pushing docker image'){
+    stage('stage 6: Pushing docker image'){
         withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerhubpass')]) {
         sh "docker login -u arjunkauthkar -p ${dockerhubpass}"
         }
         sh 'docker push arjunkauthkar/springboot:1.0.0'
     }
     
-    stage('stage 6: Pulling docker image'){
+    stage('stage 7: Pulling docker image'){
         sh 'docker pull arjunkauthkar/springboot:1.0.0'
     }
     
-    stage('stage 7: Running docker image'){
-        sh 'docker run -p 8888:8080 -d arjunkauthkar/springboot:1.0.0'
-    }
+    stage('stage 8: Deploy to Tomcat'){
+	    sshagent(['tomcatserver']) {
+	    sh 'scp -o StrictHostKeyChecking=no target/*.war /usr/local/tomcat/apache-tomcat/webapps/'
+		}
+	}
     
-    stage('stage 8: Deploying war file to tomcat'){
-    	sh 'cp target/SpringBootApp.war /usr/local/tomcat/webapps/ROOT.war'
+    stage('stage 9: Run container'){
+        sh 'docker run -p 8888:8080 -d arjunkauthkar/springboot:1.0.0'
     }
 }
