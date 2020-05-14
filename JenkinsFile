@@ -32,17 +32,11 @@ node{
         sh 'docker push arjunkauthkar/springboot:1.0.0'
     }
     
-    stage('stage 7: Pulling docker image'){
+    stage('stage 7: Deploy container'){
         sh 'docker pull arjunkauthkar/springboot:1.0.0'
     }
     
-    stage('stage 8: Deploy to Tomcat'){
-	    sshagent(['tomcatserver']) {
-	    sh 'scp -o StrictHostKeyChecking=no target/*.war /usr/local/tomcat/apache-tomcat/webapps/'
-		}
-	}
-    
-    stage('stage 9: Run container'){
+    stage('stage 8: Run container'){
         sh 'docker run -p 8888:8080 -d arjunkauthkar/springboot:1.0.0'
     }
 }
